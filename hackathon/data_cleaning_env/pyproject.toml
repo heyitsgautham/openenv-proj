@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openenv-data-cleaning-env"
+version = "0.1.0"
+description = "Data Cleaning and Transformation environment for OpenEnv"
+requires-python = ">=3.11"
+dependencies = [
+    "openenv-core[core]>=0.2.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[project.scripts]
+server = "data_cleaning_env.server.app:main"
+
+[tool.setuptools]
+packages = ["data_cleaning_env", "data_cleaning_env.server", "data_cleaning_env.server.tasks"]
+
+[tool.setuptools.package-dir]
+data_cleaning_env = "."
