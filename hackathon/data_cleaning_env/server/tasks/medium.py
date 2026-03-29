@@ -6,8 +6,17 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
+from ..graders import (
+    append_error,
+    clamp_score,
+    normalize_date,
+    normalize_string,
+    numeric_match,
+    parse_float,
+    parse_int,
+)
 from .base import BaseTask, GradeResult
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"
@@ -44,40 +53,19 @@ def _load_json(filename: str) -> Any:
 
 
 def _norm_text(value: Any) -> str:
-    return " ".join(str(value or "").strip().lower().split())
+    return normalize_string(value, null_tokens=())
 
 
 def _norm_date(value: Any) -> str:
-    raw = str(value or "").strip()
-    if not raw:
-        return ""
-    for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%m/%d/%Y", "%B %d %Y", "%b %d %Y"):
-        try:
-            return datetime.strptime(raw, fmt).date().isoformat()
-        except ValueError:
-            continue
-    return raw.lower()
+    return normalize_date(value)
 
 
-def _to_float(value: Any) -> Optional[float]:
-    raw = str(value or "").strip()
-    if not raw:
-        return None
-    cleaned = raw.replace("$", "").replace(",", "")
-    try:
-        return float(cleaned)
-    except ValueError:
-        return None
+def _to_float(value: Any) -> float | None:
+    return parse_float(value)
 
 
-def _to_int(value: Any) -> Optional[int]:
-    raw = str(value or "").strip()
-    if not raw:
-        return None
-    try:
-        return int(float(raw))
-    except ValueError:
-        return None
+def _to_int(value: Any) -> int | None:
+    return parse_int(value)
 
 
 def _normalize_record(row: Dict[str, Any]) -> Dict[str, Any]:
@@ -105,15 +93,7 @@ def _normalize_record(row: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _numeric_match(expected: Any, actual: Any) -> bool:
-    expected_num = _to_float(expected)
-    actual_num = _to_float(actual)
-    if expected_num is None or actual_num is None:
-        return False
-    if expected_num == 0:
-        return abs(actual_num) <= 0.01
-    abs_diff = abs(expected_num - actual_num)
-    rel_diff = abs_diff / abs(expected_num)
-    return abs_diff <= 1.0 and rel_diff <= 0.01
+    return numeric_match(expected, actual)
 
 
 def _is_end_after_start(start_date: str, end_date: str) -> bool:
@@ -155,6 +135,8 @@ class MediumTask(BaseTask):
         self.rules = rules
         self.reference = reference
         self._expected_data = [_normalize_record(row) for row in expected_data]
+        self.expected_data = self._expected_data
+        self.gold_data = self._expected_data
         self.target_schema = {
             "transaction_id": "string",
             "full_name": "string",
@@ -194,12 +176,13 @@ class MediumTask(BaseTask):
         return 1.0
 
     def grade(self, submitted: List[Dict[str, Any]]) -> GradeResult:
+        max_errors = 30
         if not isinstance(submitted, list):
             return GradeResult(
                 score=0.0,
                 correct_fields=0,
                 total_fields=self.total_gradable_fields,
-                errors=["Submission must be a list of records."],
+                errors=["SCHEMA_ERROR|detail=submission_must_be_list|record=root"],
             )
 
         errors: List[str] = []
@@ -207,12 +190,26 @@ class MediumTask(BaseTask):
 
         submitted_map: Dict[str, Dict[str, Any]] = {}
         duplicate_ids = set()
-        for row in submitted:
+        for index, row in enumerate(submitted):
             if not isinstance(row, dict):
+                append_error(
+                    errors,
+                    max_errors,
+                    "SCHEMA_ERROR",
+                    detail="item_not_object",
+                    record=index,
+                )
                 continue
             normalized = _normalize_record(row)
             tx_id = normalized.get("transaction_id", "")
             if not tx_id:
+                append_error(
+                    errors,
+                    max_errors,
+                    "SCHEMA_ERROR",
+                    detail="missing_transaction_id",
+                    record=index,
+                )
                 continue
             if tx_id in submitted_map:
                 duplicate_ids.add(tx_id)
@@ -223,11 +220,11 @@ class MediumTask(BaseTask):
         correct_fields = 0
         total_fields = self.total_gradable_fields
 
-        for tx_id, expected in expected_map.items():
+        for tx_id in sorted(expected_map):
+            expected = expected_map[tx_id]
             actual = submitted_map.get(tx_id)
             if actual is None:
-                if len(errors) < 30:
-                    errors.append(f"Missing transformed record for transaction_id={tx_id}")
+                append_error(errors, max_errors, "MISSING_RECORD", key=tx_id)
                 continue
 
             for field in _OUTPUT_FIELDS:
@@ -245,14 +242,22 @@ class MediumTask(BaseTask):
 
                 if matches:
                     correct_fields += 1
-                elif len(errors) < 30:
-                    errors.append(f"Mismatch for {tx_id} field '{field}'")
+                else:
+                    append_error(
+                        errors,
+                        max_errors,
+                        "MISMATCH",
+                        actual=actual_value,
+                        expected=expected_value,
+                        field=field,
+                        key=tx_id,
+                    )
 
         field_accuracy = (correct_fields / total_fields) if total_fields else 0.0
 
         constraints_total = len(self._expected_data) * 3
         constraints_passed = 0
-        for tx_id in expected_map:
+        for tx_id in sorted(expected_map):
             actual = submitted_map.get(tx_id)
             if actual is None:
                 continue
@@ -273,15 +278,18 @@ class MediumTask(BaseTask):
             constraints_passed / constraints_total if constraints_total else 0.0
         )
 
-        if duplicate_ids and len(errors) < 30:
-            errors.append(f"Duplicate transaction_id values in submission: {sorted(duplicate_ids)[:5]}")
+        for tx_id in sorted(duplicate_ids):
+            append_error(errors, max_errors, "DUPLICATE_RECORD", key=tx_id)
+
+        for tx_id in sorted(set(submitted_map.keys()) - set(expected_map.keys())):
+            append_error(errors, max_errors, "EXTRA_RECORD", key=tx_id)
 
         score = (
             0.2 * schema_compliance
             + 0.5 * field_accuracy
             + 0.3 * constraint_satisfaction
         )
-        score = max(0.0, min(1.0, score))
+        score = clamp_score(score)
 
         return GradeResult(
             score=score,

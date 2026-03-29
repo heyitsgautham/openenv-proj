@@ -4,8 +4,17 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
+from ..graders import (
+    append_error,
+    clamp_score,
+    compare_field,
+    normalize_phone,
+    normalize_string,
+    normalize_tags,
+    parse_float,
+)
 from .base import BaseTask, GradeResult
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"
@@ -36,36 +45,19 @@ def _load_json(filename: str) -> Any:
 
 
 def _norm_text(value: Any) -> str:
-    return " ".join(str(value or "").strip().lower().split())
+    return normalize_string(value, null_tokens=())
 
 
 def _norm_phone(value: Any) -> str:
-    digits = "".join(ch for ch in str(value or "") if ch.isdigit())
-    if len(digits) >= 10:
-        digits = digits[-10:]
-        return f"{digits[0:3]}-{digits[3:6]}-{digits[6:10]}"
-    return digits
+    return normalize_phone(value)
 
 
-def _to_float(value: Any) -> Optional[float]:
-    raw = str(value or "").strip()
-    if not raw:
-        return None
-    cleaned = raw.replace("$", "").replace(",", "")
-    try:
-        return float(cleaned)
-    except ValueError:
-        return None
+def _to_float(value: Any) -> float | None:
+    return parse_float(value)
 
 
 def _norm_tags(value: Any) -> List[str]:
-    if isinstance(value, list):
-        tags = [_norm_text(item) for item in value if str(item or "").strip()]
-    elif value is None:
-        tags = []
-    else:
-        tags = [_norm_text(part) for part in str(value).split(",") if part.strip()]
-    return sorted(set(tags))
+    return normalize_tags(value)
 
 
 def _normalize_record(row: Dict[str, Any]) -> Dict[str, Any]:
@@ -98,19 +90,15 @@ def _record_key(row: Dict[str, Any]) -> str:
 
 def _field_match(field: str, expected: Any, actual: Any) -> bool:
     if field == "lifetime_value":
-        expected_num = _to_float(expected)
-        actual_num = _to_float(actual)
-        if expected_num is None or actual_num is None:
-            return False
-        return abs(expected_num - actual_num) <= 1.0
+        return compare_field(expected, actual, field_type="numeric")
 
     if field == "metadata_tags":
-        return _norm_tags(expected) == _norm_tags(actual)
+        return compare_field(expected, actual, field_type="tags")
 
     if field == "phone":
-        return _norm_phone(expected) == _norm_phone(actual)
+        return compare_field(expected, actual, field_type="phone")
 
-    return _norm_text(expected) == _norm_text(actual)
+    return compare_field(expected, actual, field_type="string")
 
 
 class HardTask(BaseTask):
@@ -154,6 +142,8 @@ class HardTask(BaseTask):
         ]
 
         self._expected_data = [_normalize_record(row) for row in expected]
+        self.expected_data = self._expected_data
+        self.gold_data = self._expected_data
         self.target_schema = {
             "entity_name": "string",
             "email": "string",
@@ -169,12 +159,13 @@ class HardTask(BaseTask):
         self.total_gradable_fields = len(self._expected_data) * len(_OUTPUT_FIELDS)
 
     def grade(self, submitted: List[Dict[str, Any]]) -> GradeResult:
+        max_errors = 30
         if not isinstance(submitted, list):
             return GradeResult(
                 score=0.0,
                 correct_fields=0,
                 total_fields=self.total_gradable_fields,
-                errors=["Submission must be a list of records."],
+                errors=["SCHEMA_ERROR|detail=submission_must_be_list|record=root"],
             )
 
         errors: List[str] = []
@@ -182,8 +173,15 @@ class HardTask(BaseTask):
 
         submitted_map: Dict[str, Dict[str, Any]] = {}
         duplicate_keys = set()
-        for row in submitted:
+        for index, row in enumerate(submitted):
             if not isinstance(row, dict):
+                append_error(
+                    errors,
+                    max_errors,
+                    "SCHEMA_ERROR",
+                    detail="item_not_object",
+                    record=index,
+                )
                 continue
             normalized = _normalize_record(row)
             key = _record_key(normalized)
@@ -202,24 +200,33 @@ class HardTask(BaseTask):
         total_fields = self.total_gradable_fields
         correct_fields = 0
 
-        for key, expected in expected_map.items():
+        for key in sorted(expected_map):
+            expected = expected_map[key]
             actual = submitted_map.get(key)
             if actual is None:
-                if len(errors) < 30:
-                    errors.append(f"Missing reconciled record: {key}")
+                append_error(errors, max_errors, "MISSING_RECORD", key=key)
                 continue
 
             for field in _OUTPUT_FIELDS:
                 if _field_match(field, expected.get(field), actual.get(field)):
                     correct_fields += 1
-                elif len(errors) < 30:
-                    errors.append(f"Mismatch for {key} field '{field}'")
+                else:
+                    append_error(
+                        errors,
+                        max_errors,
+                        "MISMATCH",
+                        actual=actual.get(field),
+                        expected=expected.get(field),
+                        field=field,
+                        key=key,
+                    )
 
         field_correctness = (correct_fields / total_fields) if total_fields else 0.0
 
         conflict_total = expected_count * len(_CONFLICT_FIELDS)
         conflict_correct = 0
-        for key, expected in expected_map.items():
+        for key in sorted(expected_map):
+            expected = expected_map[key]
             actual = submitted_map.get(key)
             if actual is None:
                 continue
@@ -230,12 +237,11 @@ class HardTask(BaseTask):
             conflict_correct / conflict_total if conflict_total else 0.0
         )
 
-        if duplicate_keys and len(errors) < 30:
-            errors.append(f"Duplicate reconciled records detected for keys: {sorted(duplicate_keys)[:5]}")
+        for key in sorted(duplicate_keys):
+            append_error(errors, max_errors, "DUPLICATE_RECORD", key=key)
 
-        extra_keys = sorted(submitted_keys - expected_keys)
-        if extra_keys and len(errors) < 30:
-            errors.append(f"Unexpected extra reconciled records: {extra_keys[:5]}")
+        for key in sorted(submitted_keys - expected_keys):
+            append_error(errors, max_errors, "EXTRA_RECORD", key=key)
 
         score = (
             0.30 * record_matching
@@ -243,7 +249,7 @@ class HardTask(BaseTask):
             + 0.25 * conflict_resolution
             + 0.15 * completeness
         )
-        score = max(0.0, min(1.0, score))
+        score = clamp_score(score)
 
         return GradeResult(
             score=score,
