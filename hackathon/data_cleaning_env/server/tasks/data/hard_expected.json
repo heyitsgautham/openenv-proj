@@ -1,0 +1,452 @@
+[
+  {
+    "entity_name": "Customer 01",
+    "email": "customer01@example.com",
+    "phone": "555-020-0001",
+    "address": "201 Elm Street",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70001",
+    "lifetime_value": 5135.5,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 02",
+    "email": "customer02@example.com",
+    "phone": "555-020-0002",
+    "address": "202 Elm Street",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70002",
+    "lifetime_value": 5271.0,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 03",
+    "email": "customer03@example.com",
+    "phone": "555-020-0003",
+    "address": "203 Elm Street",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70003",
+    "lifetime_value": 5406.5,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 04",
+    "email": "customer04@example.com",
+    "phone": "555-020-0004",
+    "address": "204 Elm Street",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70004",
+    "lifetime_value": 5542.0,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 05",
+    "email": "customer05@example.com",
+    "phone": "555-020-0005",
+    "address": "205 Elm Street",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70005",
+    "lifetime_value": 5677.5,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 06",
+    "email": "customer06@example.com",
+    "phone": "555-020-0006",
+    "address": "206 Elm Street",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70006",
+    "lifetime_value": 5813.0,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 07",
+    "email": "customer07@example.com",
+    "phone": "555-020-0007",
+    "address": "207 Elm Street",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70007",
+    "lifetime_value": 5948.5,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 08",
+    "email": "customer08@example.com",
+    "phone": "555-020-0008",
+    "address": "208 Elm Street",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70008",
+    "lifetime_value": 6084.0,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 09",
+    "email": "customer09@example.com",
+    "phone": "555-020-0009",
+    "address": "209 Elm Street",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70009",
+    "lifetime_value": 6219.5,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 10",
+    "email": "customer10@example.com",
+    "phone": "555-020-0010",
+    "address": "210 Elm Street",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70010",
+    "lifetime_value": 6355.0,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 11",
+    "email": "customer11@example.com",
+    "phone": "555-020-0011",
+    "address": "211 Elm Street",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70011",
+    "lifetime_value": 6490.5,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 12",
+    "email": "customer12@example.com",
+    "phone": "555-020-0012",
+    "address": "212 Elm Street",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70012",
+    "lifetime_value": 6626.0,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 13",
+    "email": "customer13@example.com",
+    "phone": "555-020-0013",
+    "address": "213 Elm Street",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70013",
+    "lifetime_value": 6761.5,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 14",
+    "email": "customer14@example.com",
+    "phone": "555-020-0014",
+    "address": "214 Elm Street",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70014",
+    "lifetime_value": 6897.0,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 15",
+    "email": "customer15@example.com",
+    "phone": "555-020-0015",
+    "address": "215 Elm Street",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70015",
+    "lifetime_value": 7032.5,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 16",
+    "email": "customer16@example.com",
+    "phone": "555-020-0016",
+    "address": "216 Elm Street",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70016",
+    "lifetime_value": 7168.0,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 17",
+    "email": "customer17@example.com",
+    "phone": "555-020-0017",
+    "address": "217 Elm Street",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70017",
+    "lifetime_value": 7303.5,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 18",
+    "email": "customer18@example.com",
+    "phone": "555-020-0018",
+    "address": "218 Elm Street",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70018",
+    "lifetime_value": 7439.0,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 19",
+    "email": "customer19@example.com",
+    "phone": "555-020-0019",
+    "address": "219 Elm Street",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70019",
+    "lifetime_value": 7574.5,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 20",
+    "email": "customer20@example.com",
+    "phone": "555-020-0020",
+    "address": "220 Elm Street",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70020",
+    "lifetime_value": 7710.0,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 21",
+    "email": "customer21@example.com",
+    "phone": "555-020-0021",
+    "address": "221 Elm Street",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70021",
+    "lifetime_value": 7845.5,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 22",
+    "email": "customer22@example.com",
+    "phone": "555-020-0022",
+    "address": "222 Elm Street",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70022",
+    "lifetime_value": 7981.0,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 23",
+    "email": "customer23@example.com",
+    "phone": "555-020-0023",
+    "address": "223 Elm Street",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70023",
+    "lifetime_value": 8116.5,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 24",
+    "email": "customer24@example.com",
+    "phone": "555-020-0024",
+    "address": "224 Elm Street",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70024",
+    "lifetime_value": 8252.0,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 25",
+    "email": "customer25@example.com",
+    "phone": "555-020-0025",
+    "address": "225 Elm Street",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70025",
+    "lifetime_value": 8387.5,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 26",
+    "email": "customer26@example.com",
+    "phone": "555-020-0026",
+    "address": "226 Elm Street",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70026",
+    "lifetime_value": 8523.0,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 27",
+    "email": "customer27@example.com",
+    "phone": "555-020-0027",
+    "address": "227 Elm Street",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70027",
+    "lifetime_value": 8658.5,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 28",
+    "email": "customer28@example.com",
+    "phone": "555-020-0028",
+    "address": "228 Elm Street",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70028",
+    "lifetime_value": 8794.0,
+    "contact_status": "at_risk",
+    "metadata_tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 29",
+    "email": "customer29@example.com",
+    "phone": "555-020-0029",
+    "address": "229 Elm Street",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70029",
+    "lifetime_value": 8929.5,
+    "contact_status": "inactive",
+    "metadata_tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "entity_name": "Customer 30",
+    "email": "customer30@example.com",
+    "phone": "555-020-0030",
+    "address": "230 Elm Street",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70030",
+    "lifetime_value": 9065.0,
+    "contact_status": "active",
+    "metadata_tags": [
+      "segment-a",
+      "common"
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "tier_rules": [
+    "if amount_usd > 10000 and region == 'US' then tier='Enterprise'",
+    "else if amount_usd > 1000 then tier='Business'",
+    "else tier='Personal'"
+  ],
+  "derived_fields": {
+    "amount_usd": "amount * currency_rates[currency]",
+    "tax": "amount_usd * tax_rates[region]",
+    "total": "amount_usd + tax",
+    "full_name": "first_name + ' ' + last_name",
+    "address_split": [
+      "street",
+      "city",
+      "state",
+      "zip"
+    ]
+  },
+  "constraints": [
+    "end_date > start_date",
+    "email matches basic email regex",
+    "quantity > 0"
+  ],
+  "normalization": [
+    "trim strings",
+    "lowercase emails",
+    "coerce dates to ISO 8601",
+    "coerce numeric strings to numbers"
+  ]
+}

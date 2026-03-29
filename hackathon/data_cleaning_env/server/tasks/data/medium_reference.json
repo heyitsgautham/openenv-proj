@@ -1,0 +1,15 @@
+{
+  "currency_rates_to_usd": {
+    "USD": 1.0,
+    "EUR": 1.08,
+    "GBP": 1.25,
+    "JPY": 0.0071
+  },
+  "tax_rates_by_region": {
+    "US": 0.07,
+    "EU": 0.2,
+    "APAC": 0.1,
+    "LATAM": 0.15
+  },
+  "email_regex": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+}

@@ -1,0 +1,34 @@
+{
+  "matching_strategy": {
+    "primary": [
+      "email",
+      "phone"
+    ],
+    "fallback": [
+      "name",
+      "postal_code"
+    ]
+  },
+  "source_priority": {
+    "financial_fields": "A",
+    "contact_fields": "B",
+    "metadata_fields": "C"
+  },
+  "exceptions": [
+    "If source B email is empty, fallback to source A email.",
+    "If source B phone is empty, fallback to source A phone.",
+    "If source C tags missing, emit empty metadata_tags list."
+  ],
+  "output_fields": [
+    "entity_name",
+    "email",
+    "phone",
+    "address",
+    "city",
+    "state",
+    "postal_code",
+    "lifetime_value",
+    "contact_status",
+    "metadata_tags"
+  ]
+}

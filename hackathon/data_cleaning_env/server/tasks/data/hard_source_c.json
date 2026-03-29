@@ -1,0 +1,562 @@
+[
+  {
+    "name": "Customer 01",
+    "email": "customer01@example.com",
+    "phone": "5550200001",
+    "address": "201 Elm St",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70001",
+    "created_at": "2023-01-01",
+    "tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 02",
+    "email": "customer02@example.com",
+    "phone": "5550200002",
+    "address": "202 Elm St",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70002",
+    "created_at": "2023-02-02",
+    "tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 03",
+    "email": "customer03@example.com",
+    "phone": "5550200003",
+    "address": "203 Elm St",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70003",
+    "created_at": "2023-03-03",
+    "tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 04",
+    "email": "customer04@example.com",
+    "phone": "5550200004",
+    "address": "204 Elm St",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70004",
+    "created_at": "2023-04-04",
+    "tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 05",
+    "email": "customer05@example.com",
+    "phone": "5550200005",
+    "address": "205 Elm St",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70005",
+    "created_at": "2023-05-05",
+    "tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 06",
+    "email": "customer06@example.com",
+    "phone": "5550200006",
+    "address": "206 Elm St",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70006",
+    "created_at": "2023-06-06",
+    "tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 07",
+    "email": "customer07@example.com",
+    "phone": "5550200007",
+    "address": "207 Elm St",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70007",
+    "created_at": "2023-07-07",
+    "tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 08",
+    "email": "customer08@example.com",
+    "phone": "5550200008",
+    "address": "208 Elm St",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70008",
+    "created_at": "2023-08-08",
+    "tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 09",
+    "email": "customer09@example.com",
+    "phone": "5550200009",
+    "address": "209 Elm St",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70009",
+    "created_at": "2023-09-09",
+    "tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 10",
+    "email": "customer10@example.com",
+    "phone": "5550200010",
+    "address": "211 Elm St",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70010",
+    "created_at": "2023-10-10",
+    "tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 11",
+    "email": "customer11@example.com",
+    "phone": "5550200011",
+    "address": "211 Elm St",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70011",
+    "created_at": "2023-11-11",
+    "tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 12",
+    "email": "customer12@example.com",
+    "phone": "5550200012",
+    "address": "212 Elm St",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70012",
+    "created_at": "2023-12-12",
+    "tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 13",
+    "email": "customer13@example.com",
+    "phone": "5550200013",
+    "address": "213 Elm St",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70013",
+    "created_at": "2023-01-13",
+    "tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 14",
+    "email": "customer14@example.com",
+    "phone": "5550200014",
+    "address": "214 Elm St",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70014",
+    "created_at": "2023-02-14",
+    "tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 15",
+    "email": "customer15@example.com",
+    "phone": "5550200015",
+    "address": "215 Elm St",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70015",
+    "created_at": "2023-03-15",
+    "tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 16",
+    "email": "customer16@example.com",
+    "phone": "5550200016",
+    "address": "216 Elm St",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70016",
+    "created_at": "2023-04-16",
+    "tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 17",
+    "email": "customer17@example.com",
+    "phone": "5550200017",
+    "address": "217 Elm St",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70017",
+    "created_at": "2023-05-17",
+    "tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 18",
+    "email": "customer18@example.com",
+    "phone": "5550200018",
+    "address": "218 Elm St",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70018",
+    "created_at": "2023-06-18",
+    "tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 19",
+    "email": "customer19@example.com",
+    "phone": "5550200019",
+    "address": "219 Elm St",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70019",
+    "created_at": "2023-07-19",
+    "tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 20",
+    "email": "customer20@example.com",
+    "phone": "5550200020",
+    "address": "221 Elm St",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70020",
+    "created_at": "2023-08-20",
+    "tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 21",
+    "email": "customer21@example.com",
+    "phone": "5550200021",
+    "address": "221 Elm St",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70021",
+    "created_at": "2023-09-21",
+    "tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 22",
+    "email": "customer22@example.com",
+    "phone": "5550200022",
+    "address": "222 Elm St",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70022",
+    "created_at": "2023-10-22",
+    "tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 23",
+    "email": "customer23@example.com",
+    "phone": "5550200023",
+    "address": "223 Elm St",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70023",
+    "created_at": "2023-11-23",
+    "tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 24",
+    "email": "customer24@example.com",
+    "phone": "5550200024",
+    "address": "224 Elm St",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70024",
+    "created_at": "2023-12-24",
+    "tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 25",
+    "email": "customer25@example.com",
+    "phone": "5550200025",
+    "address": "225 Elm St",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70025",
+    "created_at": "2023-01-25",
+    "tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 26",
+    "email": "customer26@example.com",
+    "phone": "5550200026",
+    "address": "226 Elm St",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "70026",
+    "created_at": "2023-02-26",
+    "tags": [
+      "segment-b",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 27",
+    "email": "customer27@example.com",
+    "phone": "5550200027",
+    "address": "227 Elm St",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "70027",
+    "created_at": "2023-03-27",
+    "tags": [
+      "segment-c",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 28",
+    "email": "customer28@example.com",
+    "phone": "5550200028",
+    "address": "228 Elm St",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "70028",
+    "created_at": "2023-04-28",
+    "tags": [
+      "segment-d",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 29",
+    "email": "customer29@example.com",
+    "phone": "5550200029",
+    "address": "229 Elm St",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "70029",
+    "created_at": "2023-05-01",
+    "tags": [
+      "segment-e",
+      "common"
+    ]
+  },
+  {
+    "name": "Customer 30",
+    "email": "customer30@example.com",
+    "phone": "5550200030",
+    "address": "231 Elm St",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "70030",
+    "created_at": "2023-06-02",
+    "tags": [
+      "segment-a",
+      "common"
+    ]
+  },
+  {
+    "name": "C Only 31",
+    "email": "conly31@example.com",
+    "phone": "5583200031",
+    "address": "531 Birch Road",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "73031",
+    "created_at": "2023-07-03",
+    "tags": [
+      "segment-c",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 32",
+    "email": "conly32@example.com",
+    "phone": "5583200032",
+    "address": "532 Birch Road",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "73032",
+    "created_at": "2023-08-04",
+    "tags": [
+      "segment-d",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 33",
+    "email": "conly33@example.com",
+    "phone": "5583200033",
+    "address": "533 Birch Road",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "73033",
+    "created_at": "2023-09-05",
+    "tags": [
+      "segment-e",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 34",
+    "email": "conly34@example.com",
+    "phone": "5583200034",
+    "address": "534 Birch Road",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "73034",
+    "created_at": "2023-10-06",
+    "tags": [
+      "segment-a",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 35",
+    "email": "conly35@example.com",
+    "phone": "5583200035",
+    "address": "535 Birch Road",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "73035",
+    "created_at": "2023-11-07",
+    "tags": [
+      "segment-b",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 36",
+    "email": "conly36@example.com",
+    "phone": "5583200036",
+    "address": "536 Birch Road",
+    "city": "Lakeford",
+    "state": "WA",
+    "postal_code": "73036",
+    "created_at": "2023-12-08",
+    "tags": [
+      "segment-c",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 37",
+    "email": "conly37@example.com",
+    "phone": "5583200037",
+    "address": "537 Birch Road",
+    "city": "Red Mesa",
+    "state": "FL",
+    "postal_code": "73037",
+    "created_at": "2023-01-09",
+    "tags": [
+      "segment-d",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 38",
+    "email": "conly38@example.com",
+    "phone": "5583200038",
+    "address": "538 Birch Road",
+    "city": "San Aurora",
+    "state": "CA",
+    "postal_code": "73038",
+    "created_at": "2023-02-10",
+    "tags": [
+      "segment-e",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 39",
+    "email": "conly39@example.com",
+    "phone": "5583200039",
+    "address": "539 Birch Road",
+    "city": "Metrovale",
+    "state": "NY",
+    "postal_code": "73039",
+    "created_at": "2023-03-11",
+    "tags": [
+      "segment-a",
+      "source-c"
+    ]
+  },
+  {
+    "name": "C Only 40",
+    "email": "conly40@example.com",
+    "phone": "5583200040",
+    "address": "540 Birch Road",
+    "city": "Pine Harbor",
+    "state": "TX",
+    "postal_code": "73040",
+    "created_at": "2023-04-12",
+    "tags": [
+      "segment-b",
+      "source-c"
+    ]
+  }
+]
