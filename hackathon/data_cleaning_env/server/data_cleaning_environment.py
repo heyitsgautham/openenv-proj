@@ -18,7 +18,7 @@ try:
     from ..models import DataCleanAction, DataCleanObservation, DataCleanState
     from .graders import grade_submission
     from .tasks import TASK_REGISTRY
-except ModuleNotFoundError:
+except (ModuleNotFoundError, ImportError):
     from models import DataCleanAction, DataCleanObservation, DataCleanState
     from server.graders import grade_submission
     from server.tasks import TASK_REGISTRY

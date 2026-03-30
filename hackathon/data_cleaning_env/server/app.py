@@ -8,7 +8,7 @@ except Exception as e:
 try:
     from ..models import DataCleanAction, DataCleanObservation
     from .data_cleaning_environment import DataCleanEnvironment
-except ModuleNotFoundError:
+except (ModuleNotFoundError, ImportError):
     from models import DataCleanAction, DataCleanObservation
     from server.data_cleaning_environment import DataCleanEnvironment
 
@@ -36,4 +36,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
-    main(port=args.port)
+    if args.port == 8000:
+        main()
+    else:
+        main(port=args.port)
