@@ -9,6 +9,7 @@ Required environment variables:
 Connection behavior:
 - Try ENV_URL first (default http://localhost:8000)
 - If unavailable, fall back to Docker image via from_docker_image
+- Optional LOCAL_IMAGE_NAME when using from_docker_image
 """
 
 from __future__ import annotations
@@ -33,7 +34,7 @@ API_BASE_URL = os.getenv("API_BASE_URL") or "https://router.huggingface.co/v1"
 MODEL_NAME = os.getenv("MODEL_NAME")
 API_KEY = os.getenv("HF_TOKEN") or os.getenv("API_KEY") or os.getenv("OPENAI_API_KEY")
 ENV_URL = os.getenv("ENV_URL", "http://localhost:8000")
-DOCKER_IMAGE = os.getenv("DOCKER_IMAGE", "data-cleaning-env:latest")
+LOCAL_IMAGE_NAME = os.getenv("LOCAL_IMAGE_NAME", "data-cleaning-env:latest")
 
 TASKS = ["easy", "medium", "hard"]
 TASK_MAX_STEPS = {"easy": 10, "medium": 15, "hard": 20}
@@ -60,6 +61,18 @@ def _validate_required_env() -> None:
         sys.exit("ERROR: Missing API key. Set HF_TOKEN, API_KEY, or OPENAI_API_KEY.")
     if not MODEL_NAME:
         sys.exit("ERROR: Missing MODEL_NAME.")
+
+
+def _log_start(message: str) -> None:
+    print(f"START: {message}")
+
+
+def _log_step(message: str) -> None:
+    print(f"STEP: {message}")
+
+
+def _log_end(message: str) -> None:
+    print(f"END: {message}")
 
 
 def _extract_response_text(content: Any) -> str:
@@ -148,16 +161,16 @@ def _server_is_reachable(url: str, timeout: float = 3.0) -> bool:
 
 def _connect_env() -> Any:
     if _server_is_reachable(ENV_URL):
-        print(f"[connect] Using running server at {ENV_URL}")
+        _log_step(f"Using running server at {ENV_URL}")
         try:
             return DataCleanEnv(base_url=ENV_URL).sync()
         except Exception as exc:
-            print(f"[connect] Failed to connect via ENV_URL ({exc}). Trying Docker fallback.")
+            _log_step(f"Failed to connect via ENV_URL ({exc}). Trying Docker fallback.")
 
-    print(f"[connect] ENV_URL unavailable: {ENV_URL}")
-    print(f"[connect] Falling back to Docker image: {DOCKER_IMAGE}")
+    _log_step(f"ENV_URL unavailable: {ENV_URL}")
+    _log_step(f"Falling back to Docker image: {LOCAL_IMAGE_NAME}")
     try:
-        docker_env = asyncio.run(DataCleanEnv.from_docker_image(DOCKER_IMAGE))
+        docker_env = asyncio.run(DataCleanEnv.from_docker_image(LOCAL_IMAGE_NAME))
         return docker_env.sync()
     except Exception as exc:
         sys.exit(f"ERROR: Unable to connect via ENV_URL or Docker fallback ({exc}).")
@@ -182,15 +195,13 @@ def run_task(env: Any, client: OpenAI, task_id: str) -> Dict[str, Any]:
     observation = result.observation
     max_steps = TASK_MAX_STEPS.get(task_id, 10)
 
-    print("=" * 60)
-    print(f"Task: {task_id} | max_steps={max_steps}")
-    print(f"Input records: {len(observation.input_data)}")
+    _log_start(f"task={task_id} max_steps={max_steps} input_records={len(observation.input_data)}")
 
     best_score = float(observation.current_score)
 
     for step in range(1, max_steps + 1):
         if result.done:
-            print("  Environment marked done before next step.")
+            _log_step(f"task={task_id} step={step} status=done_before_next_step")
             break
 
         prompt = build_user_prompt(observation, step, max_steps)
@@ -199,9 +210,11 @@ def run_task(env: Any, client: OpenAI, task_id: str) -> Dict[str, Any]:
             response_text = _request_model_output(client, prompt)
             cleaned_data = parse_response(response_text)
             if not cleaned_data:
-                print("  Model output was not valid JSON list[dict]. Using empty payload fallback.")
+                _log_step(
+                    f"task={task_id} step={step} status=invalid_model_json fallback=empty_payload"
+                )
         except Exception as exc:
-            print(f"  Model request failed ({exc}). Using empty payload fallback.")
+            _log_step(f"task={task_id} step={step} status=model_request_failed error={exc}")
             cleaned_data = []
 
         action = DataCleanAction(data=cleaned_data)
@@ -213,24 +226,25 @@ def run_task(env: Any, client: OpenAI, task_id: str) -> Dict[str, Any]:
         reward = float(result.reward) if result.reward is not None else 0.0
         error_count = len(observation.validation_errors)
 
-        print(
-            f"  Step {step}/{max_steps}: score={score:.3f} | "
-            f"errors={error_count} | reward={reward:.3f}"
+        _log_step(
+            f"task={task_id} step={step}/{max_steps} score={score:.3f} "
+            f"errors={error_count} reward={reward:.3f}"
         )
 
         if score >= NEAR_PERFECT_SCORE:
-            print("  Near-perfect score reached. Early stopping this task.")
+            _log_step(f"task={task_id} step={step} status=near_perfect_early_stop")
             break
 
         if result.done:
-            print("  Environment signalled done.")
+            _log_step(f"task={task_id} step={step} status=environment_done")
             break
 
-    print(f"  Best score ({task_id}): {best_score:.3f}")
+    _log_end(f"task={task_id} best_score={best_score:.3f}")
     return {"task_id": task_id, "best_score": best_score}
 
 
 def main() -> None:
+    _log_start("inference")
     _validate_required_env()
 
     try:
@@ -249,12 +263,9 @@ def main() -> None:
         total = sum(item["best_score"] for item in results)
         average = total / len(results) if results else 0.0
 
-        print("=" * 60)
-        print("Baseline scores")
         for item in results:
-            print(f"  {item['task_id']}: {item['best_score']:.3f}")
-        print(f"  average: {average:.3f}")
-        print("=" * 60)
+            _log_step(f"summary task={item['task_id']} best_score={item['best_score']:.3f}")
+        _log_end(f"inference average={average:.3f}")
     finally:
         try:
             env.close()
