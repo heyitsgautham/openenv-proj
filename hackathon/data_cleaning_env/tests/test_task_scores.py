@@ -51,9 +51,9 @@ def test_score_bounds_and_spread(task_id: str) -> None:
     partial_result = task.grade(partial)
     perfect_result = task.grade(gold)
 
-    assert 0.0 <= empty_result.score <= 1.0
-    assert 0.0 <= partial_result.score <= 1.0
-    assert 0.0 <= perfect_result.score <= 1.0
+    assert 0.0 < empty_result.score < 1.0
+    assert 0.0 < partial_result.score < 1.0
+    assert 0.0 < perfect_result.score < 1.0
 
     assert empty_result.score <= 0.05
     assert perfect_result.score >= 0.95
@@ -80,7 +80,7 @@ def test_malformed_submission_reports_structured_errors(task_id: str) -> None:
     task = TASK_REGISTRY[task_id]
     malformed = task.grade([{"bad": "shape"}, None, 42])
 
-    assert 0.0 <= malformed.score <= 1.0
+    assert 0.0 < malformed.score < 1.0
     assert malformed.errors
     assert any(error.startswith("SCHEMA_ERROR|") for error in malformed.errors)
 

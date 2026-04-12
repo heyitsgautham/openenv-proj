@@ -119,7 +119,7 @@ class EasyTask(BaseTask):
         max_errors = 25
         if not isinstance(submitted, list):
             return GradeResult(
-                score=0.0,
+                score=clamp_score(0.0),
                 correct_fields=0,
                 total_fields=self.total_gradable_fields,
                 errors=["SCHEMA_ERROR|detail=submission_must_be_list|record=root"],

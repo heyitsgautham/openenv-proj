@@ -28,10 +28,10 @@ class _DummyTask:
 
 
 def test_clamp_score_bounds() -> None:
-    assert clamp_score(-0.5) == 0.0
+    assert 0.0 < clamp_score(-0.5) < 0.01
     assert clamp_score(0.25) == 0.25
-    assert clamp_score(2.0) == 1.0
-    assert clamp_score("bad") == 0.0
+    assert 0.99 < clamp_score(2.0) < 1.0
+    assert 0.0 < clamp_score("bad") < 0.01
 
 
 def test_compare_numeric_with_tolerance() -> None:
@@ -65,4 +65,4 @@ def test_append_error_respects_cap() -> None:
 
 def test_grade_submission_clamps_score() -> None:
     result = grade_submission(_DummyTask(), submitted_data=[])
-    assert result.score == 1.0
+    assert 0.99 < result.score < 1.0

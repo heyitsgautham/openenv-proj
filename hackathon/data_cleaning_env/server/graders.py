@@ -13,15 +13,17 @@ _DEFAULT_DATE_FORMATS = (
     "%B %d %Y",
     "%b %d %Y",
 )
+_SCORE_EPSILON = 1e-3
 
 
 def clamp_score(score: float) -> float:
-    """Clamp any numeric-like score into the inclusive range [0.0, 1.0]."""
+    """Clamp any numeric-like score into the strict-open range (0.0, 1.0)."""
     try:
         value = float(score)
     except (TypeError, ValueError):
-        return 0.0
-    return max(0.0, min(1.0, value))
+        return _SCORE_EPSILON
+    bounded = max(0.0, min(1.0, value))
+    return max(_SCORE_EPSILON, min(1.0 - _SCORE_EPSILON, bounded))
 
 
 def normalize_string(value: Any, null_tokens: Iterable[str] | None = None) -> str:
