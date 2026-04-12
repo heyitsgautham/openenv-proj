@@ -124,15 +124,15 @@ def _validate_required_env() -> None:
 
 
 def _log_start(message: str) -> None:
-    print(f"START: {message}")
+    print(f"[START] {message}", flush=True)
 
 
 def _log_step(message: str) -> None:
-    print(f"STEP: {message}")
+    print(f"[STEP] {message}", flush=True)
 
 
 def _log_end(message: str) -> None:
-    print(f"END: {message}")
+    print(f"[END] {message}", flush=True)
 
 
 def _extract_response_text(content: Any) -> str:
