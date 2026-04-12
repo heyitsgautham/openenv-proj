@@ -16,6 +16,7 @@ Connection behavior:
 from __future__ import annotations
 
 import asyncio
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 import json
 import os
 from pathlib import Path
@@ -65,6 +66,9 @@ TEMPERATURE = float(os.getenv("TEMPERATURE", "0.2"))
 MAX_TOKENS = int(os.getenv("MAX_TOKENS", "4096"))
 LLM_TIMEOUT_S = float(os.getenv("LLM_TIMEOUT_S", "45"))
 ENV_STEP_TIMEOUT_S = float(os.getenv("ENV_STEP_TIMEOUT_S", "8"))
+ENV_RESET_TIMEOUT_S = float(os.getenv("ENV_RESET_TIMEOUT_S", "12"))
+ENV_CONNECT_TIMEOUT_S = float(os.getenv("ENV_CONNECT_TIMEOUT_S", "20"))
+DOCKER_CONNECT_TIMEOUT_S = float(os.getenv("DOCKER_CONNECT_TIMEOUT_S", "40"))
 TASK_TIME_BUDGET_S = float(os.getenv("TASK_TIME_BUDGET_S", "360"))
 INFERENCE_TIME_BUDGET_S = float(os.getenv("INFERENCE_TIME_BUDGET_S", "1080"))
 MAX_CONSECUTIVE_MODEL_FAILURES = int(os.getenv("MAX_CONSECUTIVE_MODEL_FAILURES", "2"))
@@ -100,6 +104,12 @@ def _validate_required_env() -> None:
         sys.exit("ERROR: LLM_TIMEOUT_S must be > 0.")
     if ENV_STEP_TIMEOUT_S <= 0:
         sys.exit("ERROR: ENV_STEP_TIMEOUT_S must be > 0.")
+    if ENV_RESET_TIMEOUT_S <= 0:
+        sys.exit("ERROR: ENV_RESET_TIMEOUT_S must be > 0.")
+    if ENV_CONNECT_TIMEOUT_S <= 0:
+        sys.exit("ERROR: ENV_CONNECT_TIMEOUT_S must be > 0.")
+    if DOCKER_CONNECT_TIMEOUT_S <= 0:
+        sys.exit("ERROR: DOCKER_CONNECT_TIMEOUT_S must be > 0.")
     if TASK_TIME_BUDGET_S <= 0:
         sys.exit("ERROR: TASK_TIME_BUDGET_S must be > 0.")
     if INFERENCE_TIME_BUDGET_S <= 0:
@@ -200,19 +210,41 @@ def _server_is_reachable(url: str, timeout: float = 3.0) -> bool:
         return False
 
 
+def _run_with_timeout(fn: Any, timeout_s: float, label: str) -> Any:
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        future = pool.submit(fn)
+        try:
+            return future.result(timeout=timeout_s)
+        except FuturesTimeoutError as exc:
+            raise TimeoutError(f"{label} timed out after {timeout_s:.1f}s") from exc
+
+
 def _connect_env() -> Any:
     if _server_is_reachable(ENV_URL):
         _log_step(f"Using running server at {ENV_URL}")
         try:
-            return DataCleanEnv(base_url=ENV_URL).sync()
+            return _run_with_timeout(
+                lambda: DataCleanEnv(base_url=ENV_URL).sync(),
+                timeout_s=ENV_CONNECT_TIMEOUT_S,
+                label="env_sync",
+            )
         except Exception as exc:
             _log_step(f"Failed to connect via ENV_URL ({exc}). Trying Docker fallback.")
 
     _log_step(f"ENV_URL unavailable: {ENV_URL}")
     _log_step(f"Falling back to Docker image: {LOCAL_IMAGE_NAME}")
     try:
-        docker_env = asyncio.run(DataCleanEnv.from_docker_image(LOCAL_IMAGE_NAME))
-        return docker_env.sync()
+        docker_env = asyncio.run(
+            asyncio.wait_for(
+                DataCleanEnv.from_docker_image(LOCAL_IMAGE_NAME),
+                timeout=DOCKER_CONNECT_TIMEOUT_S,
+            )
+        )
+        return _run_with_timeout(
+            docker_env.sync,
+            timeout_s=ENV_CONNECT_TIMEOUT_S,
+            label="docker_env_sync",
+        )
     except Exception as exc:
         sys.exit(f"ERROR: Unable to connect via ENV_URL or Docker fallback ({exc}).")
 
@@ -238,7 +270,11 @@ def run_task(
     task_id: str,
     global_deadline: float,
 ) -> Dict[str, Any]:
-    result = env.reset(task_id=task_id)
+    result = _run_with_timeout(
+        lambda: env.reset(task_id=task_id),
+        timeout_s=ENV_RESET_TIMEOUT_S,
+        label=f"reset_{task_id}",
+    )
     observation = result.observation
     max_steps = TASK_MAX_STEPS.get(task_id, 10)
     task_deadline = min(global_deadline, time.monotonic() + TASK_TIME_BUDGET_S)
@@ -285,7 +321,15 @@ def run_task(
                 break
 
         action = DataCleanAction(data=cleaned_data)
-        result = env.step(action, timeout_s=ENV_STEP_TIMEOUT_S)
+        try:
+            result = _run_with_timeout(
+                lambda: env.step(action, timeout_s=ENV_STEP_TIMEOUT_S),
+                timeout_s=ENV_STEP_TIMEOUT_S + 2.0,
+                label=f"step_{task_id}_{step}",
+            )
+        except Exception as exc:
+            _log_step(f"task={task_id} step={step} status=env_step_failed error={exc}")
+            break
         observation = result.observation
 
         score = float(observation.current_score)
